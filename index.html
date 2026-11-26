@@ -38,8 +38,12 @@
   nav .wrap { display: flex; align-items: center; gap: 10px; height: 52px; }
   nav .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink); }
   nav .brand img { width: 24px; height: 24px; }
-  nav .links { margin-left: auto; display: flex; gap: 22px; font-size: 13px; }
-  nav .links a { color: var(--ink2); }
+  nav .links { margin-left: auto; display: flex; align-items: center; gap: 22px; font-size: 13px; }
+  nav .links a { color: var(--ink2); line-height: 1; }
+  nav .links a:hover { color: var(--ink); text-decoration: none; }
+  nav .brand:hover { text-decoration: none; }
+  nav .links a.btn { color: #fff; padding: 8px 16px; }
+  nav .links a.btn:hover { color: #fff; }
   @media (max-width: 640px) { nav .links a:not(.cta) { display: none; } }
 
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 980px;
@@ -98,6 +102,21 @@
   .card .num { font-size: 15px; font-weight: 600; color: var(--accent); margin-bottom: 10px; }
   .card .ico { width: 36px; height: 36px; color: var(--accent); margin-bottom: 14px; }
 
+  /* плавная навигация + отступ под липким меню */
+  html { scroll-behavior: smooth; }
+  section[id], header[id] { scroll-margin-top: 60px; }
+
+  /* линейка плагинов */
+  .plug { display: flex; flex-direction: column; align-items: flex-start; }
+  .pico { width: 60px; height: 60px; border-radius: 15px; flex: none; margin-bottom: 16px;
+          display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: var(--shadow); }
+  .pico svg { width: 32px; height: 32px; }
+  .plug h3 { font-size: 22px; }
+  .plug p { flex: 1 1 auto; }
+  .plug .btn.small { margin-top: 18px; font-size: 14px; align-self: flex-start; }
+  .plug .btn.small.ghost2 { background: transparent; color: var(--accent);
+          border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); }
+
   /* products */
   .prod { display: flex; gap: 18px; align-items: flex-start; }
   .g3 .prod { flex-direction: column; gap: 14px; }
@@ -127,9 +146,9 @@
   <div class="wrap">
     <a class="brand" href="#"><img src="img/erasely.png" alt="">Erasely</a>
     <div class="links">
+      <a href="#plugins">Плагины</a>
       <a href="#how">Как работает</a>
       <a href="#layers">Подписи слоями</a>
-      <a href="#who">Для кого</a>
       <a href="#more">Другие сервисы</a>
       <a class="btn small cta" href="#get">Установить</a>
     </div>
@@ -158,7 +177,42 @@
   </div>
 </header>
 
-<section id="who" class="alt">
+<section id="plugins" class="alt">
+  <div class="wrap">
+    <h2>Три плагина для Figma.</h2>
+    <p class="sub">Бесплатные инструменты для тех, кто делает учебные материалы и дизайн. Всё считается локально — без подписок, лимитов и регистрации.</p>
+    <div class="grid g3">
+      <div class="card plug">
+        <img class="pico" src="img/erasely-512.png" alt="Erasely" style="object-fit:cover">
+        <h3>Erasely</h3>
+        <p>Стирает подписи и выноски со схем — в прозрачность, а не белым. Нейросеть находит текст, а подписи можно вернуть своими текстовыми слоями.</p>
+        <a class="btn small" href="#get">Подробнее и скачать ›</a>
+      </div>
+      <div class="card plug">
+        <div class="pico" style="background:linear-gradient(135deg,#8a5bff,#4318d6)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 7l16-2.5v13L4 20z"/><path d="M4 11l16-1.6M12 5.4v13" opacity=".55"/></svg>
+        </div>
+        <h3>Figma → After&nbsp;Effects</h3>
+        <p>Перспектива и скос, warp-сетка 3×3 и экспорт слоёв в After Effects: каждый фрейм становится готовой композицией.</p>
+        <a class="btn small ghost2" href="FigmaToAE.zip" download>Скачать · 23&nbsp;КБ</a>
+      </div>
+      <div class="card plug">
+        <div class="pico" style="background:linear-gradient(135deg,#35cfa8,#1b9a7c)">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M5 17 Q12 13.5 19 17" stroke="#fff" stroke-opacity=".5" stroke-width="3.2" stroke-linecap="round"/>
+            <rect x="6" y="6" width="12" height="9" rx="2.4" fill="#fff"/></svg>
+        </div>
+        <h3>Curved shadow</h3>
+        <p>Кладёт под объект мягкую изогнутую тень — карточка, картинка или стикер словно приподняты над страницей.</p>
+        <a class="btn small ghost2" href="CurvedShadow.zip" download>Скачать · 7&nbsp;КБ</a>
+      </div>
+    </div>
+    <p class="caption">Установка одинаковая: распакуйте архив → Figma → Plugins → Development → Import plugin from manifest.</p>
+  </div>
+</section>
+
+<section id="who">
   <div class="wrap">
     <h2>Для тех, кто делает материалы сам.</h2>
     <p class="sub">Картинка из учебника есть, а немой — нет. Раньше это полчаса в Photoshop на одну схему.</p>
