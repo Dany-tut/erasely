@@ -76,27 +76,10 @@
                            linear-gradient(45deg, transparent 75%, var(--chk2) 75%), linear-gradient(-45deg, transparent 75%, var(--chk2) 75%);
          background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0; }
   .compare .after-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
-  /* ручка «лупа + ластик»: линза показывает «После», держатель-ластик, крошки у шва */
-  .compare .handle { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 6px; transform: translateX(-3px); pointer-events: none; z-index: 2;
-             background: linear-gradient(90deg, transparent, rgba(110,110,125,.45), transparent); filter: blur(.5px); }
-  .compare .loupe { position: absolute; top: 50%; left: var(--pos, 50%); width: 132px; height: 132px; border-radius: 50%; box-sizing: border-box;
-             transform: translate(-50%, -50%); pointer-events: none; z-index: 3; background-color: #fff;
-             border: 5px solid rgba(255,255,255,.95);
-             box-shadow: 0 16px 38px rgba(0,0,0,.4), 0 0 0 1px rgba(0,0,0,.22), inset 0 0 0 1px rgba(0,0,0,.12); }
-  .compare .loupe::after { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
-             background: radial-gradient(circle at 33% 26%, rgba(255,255,255,.55), transparent 44%); }
-  .compare .loupe .grip { position: absolute; width: 54px; height: 33px; border-radius: 7px; right: -31px; bottom: -20px;
-             transform: rotate(-38deg); background: linear-gradient(#fdfdff 0 55%, #ff7d9e 55% 100%);
-             box-shadow: 0 8px 18px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.9), inset 0 -2px 3px rgba(0,0,0,.12); }
-  .compare .loupe .grip::after { content: ""; position: absolute; left: 8px; right: 8px; top: 53%; height: 2px; background: rgba(0,0,0,.08); }
-  .compare .crumbs { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 0; pointer-events: none; z-index: 1; }
-  .compare .crumbs .cr { position: absolute; border-radius: 2px; will-change: transform, opacity;
-             animation: cs-cr var(--d, 3s) ease-in-out var(--delay, 0s) infinite; }
-  @keyframes cs-cr {
-    0%, 100% { opacity: var(--o, .6); transform: translateY(0) rotate(var(--rot, 0deg)); }
-    50% { opacity: calc(var(--o, .6) * .4); transform: translateY(var(--fall, 5px)) rotate(var(--rot, 0deg)); }
-  }
-  @media (prefers-reduced-motion: reduce) { .compare .crumbs .cr { animation: none; } }
+  .compare .handle { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 2px; background: var(--accent); transform: translateX(-1px); pointer-events: none; }
+  .compare .handle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; border-radius: 50%;
+             background: var(--accent); transform: translate(-50%, -50%); box-shadow: 0 4px 16px rgba(0,0,0,.25);
+             background-image: linear-gradient(90deg, transparent 13px, #fff 13px, #fff 15px, transparent 15px, transparent 25px, #fff 25px, #fff 27px, transparent 27px); }
   .compare input[type=range] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; z-index: 4; }
   .compare .tag { position: absolute; top: 14px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 980px;
                   background: rgba(29,29,31,.82); color: #fff; pointer-events: none; transition: opacity .18s ease; z-index: 3; }
@@ -453,69 +436,17 @@
   document.querySelectorAll('.compare').forEach((c) => {
     const r = c.querySelector('input[type=range]');
     const tagL = c.querySelector('.tag.l'), tagR = c.querySelector('.tag.r');
-    // лупа (показывает «После» крупно) + крошки ластика
-    const CHK = "linear-gradient(45deg,#e8e8ed 25%,transparent 25%),linear-gradient(-45deg,#e8e8ed 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e8e8ed 75%),linear-gradient(-45deg,transparent 75%,#e8e8ed 75%)";
-    const CHKsize = '24px 24px, 24px 24px, 24px 24px, 24px 24px';
-    const CHKpos = '0 0, 0 12px, 12px -12px, -12px 0';
-    const afterImg = c.querySelector('.after-wrap img');
-    const afterSrc = afterImg ? (afterImg.currentSrc || afterImg.src) : '';
-    const loupe = document.createElement('div'); loupe.className = 'loupe';
-    const grip = document.createElement('div'); grip.className = 'grip'; loupe.appendChild(grip);
-    if (afterSrc) {
-      loupe.style.backgroundImage = 'url("' + afterSrc + '"), ' + CHK;
-      loupe.style.backgroundRepeat = 'no-repeat, repeat, repeat, repeat, repeat';
-    }
-    c.appendChild(loupe);
-    // крошки ластика сыплются у шва
-    const crumbs = document.createElement('div'); crumbs.className = 'crumbs';
-    const cols = ['#ff7d9e', '#fdfdff', '#c9ccd4', '#ffa7bd'];
-    for (let i = 0; i < 22; i++) {
-      const cr = document.createElement('div'); cr.className = 'cr';
-      const t = Math.random(), side = Math.random() < 0.5 ? 1 : -1;
-      const s = 2 + Math.random() * 3.4 * (1 - t * 0.5);
-      cr.style.width = s.toFixed(1) + 'px'; cr.style.height = (s * 0.7).toFixed(1) + 'px';
-      cr.style.left = (side * (8 + t * 48)).toFixed(1) + 'px';
-      cr.style.top = (52 + Math.random() * 42).toFixed(1) + '%';
-      cr.style.background = cols[(Math.random() * cols.length) | 0];
-      cr.style.setProperty('--o', (0.4 + 0.5 * (1 - t)).toFixed(2));
-      cr.style.setProperty('--rot', (Math.random() * 90).toFixed(0) + 'deg');
-      cr.style.setProperty('--fall', (3 + Math.random() * 6).toFixed(1) + 'px');
-      cr.style.setProperty('--d', (2.4 + Math.random() * 2.6).toFixed(2) + 's');
-      cr.style.setProperty('--delay', (-Math.random() * 4).toFixed(2) + 's');
-      crumbs.appendChild(cr);
-    }
-    c.appendChild(crumbs);
-
-    const Z = 1.85, RC = 61;
-    const drawn = () => {                 // реальный прямоугольник картинки (object-fit: contain) с учётом padding
-      if (!afterImg) return null;
-      const cs = getComputedStyle(afterImg);
-      const pl = parseFloat(cs.paddingLeft) || 0, pt = parseFloat(cs.paddingTop) || 0,
-            pr = parseFloat(cs.paddingRight) || 0, pb = parseFloat(cs.paddingBottom) || 0;
-      const rr = c.getBoundingClientRect();
-      const cw = rr.width - pl - pr, ch = rr.height - pt - pb;
-      const iw = afterImg.naturalWidth, ih = afterImg.naturalHeight;
-      if (!iw || !ih) return null;
-      const sc = Math.min(cw / iw, ch / ih);
-      return { dx: pl + (cw - iw * sc) / 2, dy: pt + (ch - ih * sc) / 2, dw: iw * sc, dh: ih * sc, H: rr.height };
-    };
     const set = () => {
       const v = +r.value;
       c.style.setProperty('--pos', v + '%');
+      // чип исчезает, когда ручка проходит мимо него (считаем по его реальной ширине)
       const cr = c.getBoundingClientRect();
       const posPx = v / 100 * cr.width;
       if (tagL) { const b = tagL.getBoundingClientRect(); tagL.style.opacity = posPx >= (b.right - cr.left) ? '1' : '0'; }
       if (tagR) { const b = tagR.getBoundingClientRect(); tagR.style.opacity = posPx <= (b.left - cr.left) ? '1' : '0'; }
-      const d = drawn();
-      if (d && afterSrc) {
-        const cx = posPx, cy = d.H / 2;
-        loupe.style.backgroundSize = (d.dw * Z).toFixed(1) + 'px ' + (d.dh * Z).toFixed(1) + 'px, ' + CHKsize;
-        loupe.style.backgroundPosition = (RC - (cx - d.dx) * Z).toFixed(1) + 'px ' + (RC - (cy - d.dy) * Z).toFixed(1) + 'px, ' + CHKpos;
-      }
     };
     r.addEventListener('input', set);
     window.addEventListener('resize', set);
-    if (afterImg && !afterImg.complete) afterImg.addEventListener('load', set);
     set();
   });
 </script>
