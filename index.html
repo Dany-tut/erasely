@@ -63,7 +63,7 @@
              background: #fff; --chk1: #fff; --chk2: #e8e8ed; box-shadow: var(--shadow); user-select: none; touch-action: pan-y; }
   .compare .layer { display: block; width: 100%; height: auto; padding: 52px 28px 28px; }
   .compare .after-wrap img { padding: 52px 28px 28px; }
-  #cmp2 .layer, #cmp2 .after-wrap img { padding: 0; }
+  #cmp2 .layer, #cmp2 .after-wrap img, #cmp3 .layer, #cmp3 .after-wrap img { padding: 0; }
   @media (max-width: 640px) { #cmp1 .layer, #cmp1 .after-wrap img { padding: 44px 10px 10px; } .compare { border-radius: 20px; } }
   .compare .after-wrap { position: absolute; inset: 0; clip-path: inset(0 0 0 var(--pos, 50%)); }
   .chk { background-color: var(--chk1);
@@ -128,6 +128,7 @@
     <a class="brand" href="#"><img src="img/erasely.png" alt="">Erasely</a>
     <div class="links">
       <a href="#how">Как работает</a>
+      <a href="#layers">Подписи слоями</a>
       <a href="#who">Для кого</a>
       <a href="#more">Другие сервисы</a>
       <a class="btn small cta" href="#get">Установить</a>
@@ -177,7 +178,7 @@
     <div class="grid g3">
       <div class="card"><div class="num">1</div><h3>Выделите картинку</h3><p>Erasely сам подхватит её из выделения.</p></div>
       <div class="card"><div class="num">2</div><h3>«Убрать подписи и выноски»</h3><p>Нейросеть находит текст, правила — линии от него. Можно отдельно: только подписи или только выноски.</p></div>
-      <div class="card"><div class="num">3</div><h3>Доведите и вставьте</h3><p>Ластик, «Выноска», «Рамка» и кисть «Восстановить». Потом «Заменить» — и схема на месте.</p></div>
+      <div class="card"><div class="num">3</div><h3>Доведите и вставьте</h3><p>Ластик, «Выноска», «Рамка» и кисть «Восстановить». Потом «Вставить в Figma» — схема на месте, а с «Подписи — слоями» рядом ляжет версия с вашим текстом.</p></div>
     </div>
   </div>
 </section>
@@ -192,7 +193,7 @@
       </div>
       <div class="card">
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 9h6v6H3zM9 3h6v6H9zM15 9h6v6h-6zM9 15h6v6H9z" fill="currentColor" stroke="none" opacity=".35"/></svg>
-        <h3>Прозрачность, а не белое</h3><p>Стёртое на фоне становится прозрачным — схема ложится на цветную страницу без белых пятен.</p>
+        <h3>Чисто, без следов</h3><p>Прозрачный фон остаётся прозрачным, белый — ровно белым: ни дыр в форме букв, ни серых «призраков».</p>
       </div>
       <div class="card">
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20c4-1 6-5 8-8s4-7 8-8"/><path d="M4 12h16" stroke-dasharray="2 3"/></svg>
@@ -224,6 +225,26 @@
       <div class="handle"></div>
       <span class="tag l">До</span><span class="tag r">После</span>
       <input type="range" min="0" max="100" value="50" aria-label="Сравнить до и после">
+    </div>
+  </div>
+</section>
+
+<section id="layers">
+  <div class="wrap">
+    <h2>Подписи — снова текстом.<br>Уже вашим.</h2>
+    <p class="sub">Erasely читает подписи и возвращает их в Figma настоящими текстовыми слоями — на тех же местах,
+      в вашем шрифте. Выноски — векторными линиями одной толщины, с галочками. Двигайте, правьте слова, меняйте стиль.</p>
+    <div class="compare" id="cmp3" style="--pos:50%">
+      <img class="layer" src="img/layers-before.png" alt="Скелет лягушки с подписями-картинкой">
+      <div class="after-wrap"><img src="img/layers-after.png" alt="Та же схема: подписи — текстовые слои другим шрифтом, выноски — векторные"></div>
+      <div class="handle"></div>
+      <span class="tag l">Картинка</span><span class="tag r">Слои Figma</span>
+      <input type="range" min="0" max="100" value="50" aria-label="Сравнить картинку и слои">
+    </div>
+    <div class="grid g3">
+      <div class="card"><h3>Ваш шрифт и кегль</h3><p>Выберите шрифт из всех, что есть в Figma, — кегль подберётся по ширине слов на картинке.</p></div>
+      <div class="card"><h3>Номера вместо слов</h3><p>Режим «Номера»: 1, 2, 3… на месте подписей и ключ ответов рядом — готовое задание «подпиши части».</p></div>
+      <div class="card"><h3>Оригинал цел</h3><p>Новая версия ложится рядом, исходная картинка не меняется. Всё — одной группой.</p></div>
     </div>
   </div>
 </section>
@@ -277,6 +298,7 @@
       <details><summary>Куда уходят мои картинки?</summary><p>Никуда. Нейросеть и всё остальное работают прямо в плагине на вашем компьютере, у плагина нет доступа в интернет.</p></details>
       <details><summary>С какими картинками работает?</summary><p>Цветные схемы из учебников, чёрно-белая штриховая графика, фотографии с подписями. Лучше всего — рисунки с отдельными подписями и тонкими выносками.</p></details>
       <details><summary>Всё стирается идеально?</summary><p>Почти всё — с первого клика. Остатки (стрелки, уходящие в тёмный рисунок, хвостики линий) добираются ластиком за секунды, а лишнее возвращает кисть «Восстановить».</p></details>
+      <details><summary>Можно вернуть подписи своим шрифтом?</summary><p>Да — включите «Подписи — слоями» и нажмите «Вставить в Figma». Подписи станут текстовыми слоями в выбранном шрифте, выноски — векторными линиями. Ошибку распознавания (редко, чаще в рукописном шрифте) поправите прямо в слое.</p></details>
       <details><summary>А фон фото он убирает?</summary><p>Нет — для фона у Figma есть своя кнопка Remove background. Erasely — про подписи и выноски.</p></details>
       <details><summary>Нужна платная Figma?</summary><p>Нет, плагины работают и на бесплатном тарифе Figma.</p></details>
     </div>
