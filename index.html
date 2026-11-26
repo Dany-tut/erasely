@@ -76,24 +76,27 @@
                            linear-gradient(45deg, transparent 75%, var(--chk2) 75%), linear-gradient(-45deg, transparent 75%, var(--chk2) 75%);
          background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0; }
   .compare .after-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
-  /* ручка «частицы/волна»: светящийся шов + орб + облако частиц */
-  .compare .handle { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 2px; transform: translateX(-1px); pointer-events: none; z-index: 2;
-             background: linear-gradient(180deg, rgba(41,151,255,0), var(--accent) 50%, rgba(41,151,255,0));
-             box-shadow: 0 0 10px var(--accent), 0 0 22px rgba(41,151,255,.5); }
-  .compare .handle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 46px; height: 46px; border-radius: 50%;
-             transform: translate(-50%, -50%);
-             background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23fff'%20stroke-width='2.2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M10.5%208L6.5%2012L10.5%2016'/%3E%3Cpath%20d='M13.5%208L17.5%2012L13.5%2016'/%3E%3C/svg%3E") center / 20px no-repeat,
-                         radial-gradient(circle at 50% 38%, rgba(41,151,255,.95), rgba(41,151,255,.32));
-             border: 1px solid rgba(255,255,255,.75);
-             box-shadow: 0 0 24px var(--accent), 0 0 58px rgba(41,151,255,.55), inset 0 1px 2px rgba(255,255,255,.55); }
-  .compare .particles { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 0; pointer-events: none; z-index: 1; }
-  .compare .particles .p { position: absolute; border-radius: 1px; background: var(--accent); box-shadow: 0 0 6px var(--accent);
-             will-change: transform, opacity; animation: cs-tw var(--d, 3s) ease-in-out var(--delay, 0s) infinite; }
-  @keyframes cs-tw {
-    0%, 100% { opacity: var(--o, .5); transform: translate(0, 0) scale(1); }
-    50% { opacity: calc(var(--o, .5) * .22); transform: translate(var(--drift, 6px), -3px) scale(.55); }
+  /* ручка «лупа + ластик»: линза показывает «После», держатель-ластик, крошки у шва */
+  .compare .handle { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 6px; transform: translateX(-3px); pointer-events: none; z-index: 2;
+             background: linear-gradient(90deg, transparent, rgba(110,110,125,.45), transparent); filter: blur(.5px); }
+  .compare .loupe { position: absolute; top: 50%; left: var(--pos, 50%); width: 132px; height: 132px; border-radius: 50%; box-sizing: border-box;
+             transform: translate(-50%, -50%); pointer-events: none; z-index: 3; background-color: #fff;
+             border: 5px solid rgba(255,255,255,.95);
+             box-shadow: 0 16px 38px rgba(0,0,0,.4), 0 0 0 1px rgba(0,0,0,.22), inset 0 0 0 1px rgba(0,0,0,.12); }
+  .compare .loupe::after { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+             background: radial-gradient(circle at 33% 26%, rgba(255,255,255,.55), transparent 44%); }
+  .compare .loupe .grip { position: absolute; width: 54px; height: 33px; border-radius: 7px; right: -31px; bottom: -20px;
+             transform: rotate(-38deg); background: linear-gradient(#fdfdff 0 55%, #ff7d9e 55% 100%);
+             box-shadow: 0 8px 18px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.9), inset 0 -2px 3px rgba(0,0,0,.12); }
+  .compare .loupe .grip::after { content: ""; position: absolute; left: 8px; right: 8px; top: 53%; height: 2px; background: rgba(0,0,0,.08); }
+  .compare .crumbs { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 0; pointer-events: none; z-index: 1; }
+  .compare .crumbs .cr { position: absolute; border-radius: 2px; will-change: transform, opacity;
+             animation: cs-cr var(--d, 3s) ease-in-out var(--delay, 0s) infinite; }
+  @keyframes cs-cr {
+    0%, 100% { opacity: var(--o, .6); transform: translateY(0) rotate(var(--rot, 0deg)); }
+    50% { opacity: calc(var(--o, .6) * .4); transform: translateY(var(--fall, 5px)) rotate(var(--rot, 0deg)); }
   }
-  @media (prefers-reduced-motion: reduce) { .compare .particles .p { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .compare .crumbs .cr { animation: none; } }
   .compare input[type=range] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; z-index: 4; }
   .compare .tag { position: absolute; top: 14px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 980px;
                   background: rgba(29,29,31,.82); color: #fff; pointer-events: none; transition: opacity .18s ease; z-index: 3; }
@@ -450,34 +453,69 @@
   document.querySelectorAll('.compare').forEach((c) => {
     const r = c.querySelector('input[type=range]');
     const tagL = c.querySelector('.tag.l'), tagR = c.querySelector('.tag.r');
-    // облако частиц у шва
-    const pc = document.createElement('div'); pc.className = 'particles';
-    for (let i = 0; i < 54; i++) {
-      const p = document.createElement('div'); p.className = 'p';
-      const t = Math.random();                       // 0 у шва … 1 далеко
-      const side = Math.random() < 0.62 ? 1 : -1;    // чаще сносит в сторону «После»
-      const s = (1.4 + (1 - t) * 3.4).toFixed(1);
-      p.style.width = s + 'px'; p.style.height = s + 'px';
-      p.style.left = (side * t * 72).toFixed(1) + 'px';
-      p.style.top = (Math.random() * 100).toFixed(1) + '%';
-      p.style.setProperty('--o', (0.12 + 0.8 * (1 - t)).toFixed(2));
-      p.style.setProperty('--drift', (side * (4 + Math.random() * 9)).toFixed(1) + 'px');
-      p.style.setProperty('--d', (2.2 + Math.random() * 2.8).toFixed(2) + 's');
-      p.style.setProperty('--delay', (-Math.random() * 4).toFixed(2) + 's');
-      pc.appendChild(p);
+    // лупа (показывает «После» крупно) + крошки ластика
+    const CHK = "linear-gradient(45deg,#e8e8ed 25%,transparent 25%),linear-gradient(-45deg,#e8e8ed 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e8e8ed 75%),linear-gradient(-45deg,transparent 75%,#e8e8ed 75%)";
+    const CHKsize = '24px 24px, 24px 24px, 24px 24px, 24px 24px';
+    const CHKpos = '0 0, 0 12px, 12px -12px, -12px 0';
+    const afterImg = c.querySelector('.after-wrap img');
+    const afterSrc = afterImg ? (afterImg.currentSrc || afterImg.src) : '';
+    const loupe = document.createElement('div'); loupe.className = 'loupe';
+    const grip = document.createElement('div'); grip.className = 'grip'; loupe.appendChild(grip);
+    if (afterSrc) {
+      loupe.style.backgroundImage = 'url("' + afterSrc + '"), ' + CHK;
+      loupe.style.backgroundRepeat = 'no-repeat, repeat, repeat, repeat, repeat';
     }
-    c.appendChild(pc);
+    c.appendChild(loupe);
+    // крошки ластика сыплются у шва
+    const crumbs = document.createElement('div'); crumbs.className = 'crumbs';
+    const cols = ['#ff7d9e', '#fdfdff', '#c9ccd4', '#ffa7bd'];
+    for (let i = 0; i < 22; i++) {
+      const cr = document.createElement('div'); cr.className = 'cr';
+      const t = Math.random(), side = Math.random() < 0.5 ? 1 : -1;
+      const s = 2 + Math.random() * 3.4 * (1 - t * 0.5);
+      cr.style.width = s.toFixed(1) + 'px'; cr.style.height = (s * 0.7).toFixed(1) + 'px';
+      cr.style.left = (side * (8 + t * 48)).toFixed(1) + 'px';
+      cr.style.top = (52 + Math.random() * 42).toFixed(1) + '%';
+      cr.style.background = cols[(Math.random() * cols.length) | 0];
+      cr.style.setProperty('--o', (0.4 + 0.5 * (1 - t)).toFixed(2));
+      cr.style.setProperty('--rot', (Math.random() * 90).toFixed(0) + 'deg');
+      cr.style.setProperty('--fall', (3 + Math.random() * 6).toFixed(1) + 'px');
+      cr.style.setProperty('--d', (2.4 + Math.random() * 2.6).toFixed(2) + 's');
+      cr.style.setProperty('--delay', (-Math.random() * 4).toFixed(2) + 's');
+      crumbs.appendChild(cr);
+    }
+    c.appendChild(crumbs);
+
+    const Z = 1.85, RC = 61;
+    const drawn = () => {                 // реальный прямоугольник картинки (object-fit: contain) с учётом padding
+      if (!afterImg) return null;
+      const cs = getComputedStyle(afterImg);
+      const pl = parseFloat(cs.paddingLeft) || 0, pt = parseFloat(cs.paddingTop) || 0,
+            pr = parseFloat(cs.paddingRight) || 0, pb = parseFloat(cs.paddingBottom) || 0;
+      const rr = c.getBoundingClientRect();
+      const cw = rr.width - pl - pr, ch = rr.height - pt - pb;
+      const iw = afterImg.naturalWidth, ih = afterImg.naturalHeight;
+      if (!iw || !ih) return null;
+      const sc = Math.min(cw / iw, ch / ih);
+      return { dx: pl + (cw - iw * sc) / 2, dy: pt + (ch - ih * sc) / 2, dw: iw * sc, dh: ih * sc, H: rr.height };
+    };
     const set = () => {
       const v = +r.value;
       c.style.setProperty('--pos', v + '%');
-      // чип исчезает, когда ручка проходит мимо него (считаем по его реальной ширине)
       const cr = c.getBoundingClientRect();
       const posPx = v / 100 * cr.width;
       if (tagL) { const b = tagL.getBoundingClientRect(); tagL.style.opacity = posPx >= (b.right - cr.left) ? '1' : '0'; }
       if (tagR) { const b = tagR.getBoundingClientRect(); tagR.style.opacity = posPx <= (b.left - cr.left) ? '1' : '0'; }
+      const d = drawn();
+      if (d && afterSrc) {
+        const cx = posPx, cy = d.H / 2;
+        loupe.style.backgroundSize = (d.dw * Z).toFixed(1) + 'px ' + (d.dh * Z).toFixed(1) + 'px, ' + CHKsize;
+        loupe.style.backgroundPosition = (RC - (cx - d.dx) * Z).toFixed(1) + 'px ' + (RC - (cy - d.dy) * Z).toFixed(1) + 'px, ' + CHKpos;
+      }
     };
     r.addEventListener('input', set);
     window.addEventListener('resize', set);
+    if (afterImg && !afterImg.complete) afterImg.addEventListener('load', set);
     set();
   });
 </script>
