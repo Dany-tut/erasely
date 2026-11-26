@@ -127,12 +127,44 @@
   .prod .soon { display: inline-block; margin-top: 12px; font-size: 14px; color: var(--ink2); }
 
   /* faq */
+
+  /* бенто-сетка продуктов */
+  .bento { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: minmax(220px, auto); gap: 18px; margin-top: 48px; }
+  .bento .tile { grid-column: span 3; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: flex-start;
+    padding: 30px; border-radius: 26px; color: var(--ink); text-decoration: none; isolation: isolate;
+    background: var(--card); border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
+    transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s, border-color .35s; }
+  .bento .tile::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--c) 30%, transparent), transparent 60%);
+    opacity: .55; transition: opacity .35s; }
+  .bento a.tile:hover { transform: translateY(-4px); text-decoration: none;
+    box-shadow: 0 24px 60px color-mix(in srgb, var(--c) 22%, transparent); border-color: color-mix(in srgb, var(--c) 40%, transparent); }
+  .bento a.tile:hover::before { opacity: 1; }
+  .bento .tile.big { grid-row: span 2; padding: 40px; }
+  .bento .tile img { width: 64px; height: 64px; border-radius: 16px; margin-bottom: 22px;
+    box-shadow: 0 10px 28px color-mix(in srgb, var(--c) 35%, transparent); }
+  .bento .tile.big img { width: 96px; height: 96px; border-radius: 22px; margin-bottom: 30px; }
+  .bento .who { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--c); }
+  .bento h3 { font-size: 24px; letter-spacing: -0.02em; margin-top: 6px; }
+  .bento .tile.big h3 { font-size: 40px; letter-spacing: -0.03em; }
+  .bento p { color: var(--ink2); font-size: 16px; margin-top: 8px; max-width: 46ch; }
+  .bento .tile.big p { font-size: 19px; }
+  .bento .go { margin-top: auto; padding-top: 22px; font-size: 15px; font-weight: 500; color: var(--c); display: inline-flex; align-items: center; gap: 6px; }
+  .bento .go i { font-style: normal; transition: transform .3s; }
+  .bento a.tile:hover .go i { transform: translateX(4px); }
+  .bento .go.soon { color: var(--ink2); }
+  @media (max-width: 820px) { .bento { grid-template-columns: 1fr; } .bento .tile, .bento .tile.big { grid-column: auto; grid-row: auto; padding: 28px; } .bento .tile.big h3 { font-size: 30px; } }
+
+  /* вопросы: без выделения текста при клике, плавное раскрытие */
+  summary { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+  summary::after { transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+  details[open] summary::after { content: "+"; transform: rotate(45deg); }
+  details { overflow: hidden; }
   .faq { max-width: 760px; margin: 40px auto 0; }
   details { border-bottom: 1px solid var(--line); padding: 18px 0; }
   summary { cursor: pointer; font-size: 19px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
   summary::-webkit-details-marker { display: none; }
   summary::after { content: "+"; color: var(--ink2); font-weight: 400; font-size: 24px; line-height: 1; }
-  details[open] summary::after { content: "–"; }
   details p { color: var(--ink2); margin-top: 10px; }
 
   .final { text-align: center; }
@@ -307,39 +339,42 @@
   <div class="wrap">
     <h2>Erasely — бесплатно.<br>Вот что ещё мы делаем для репетиторов.</h2>
     <p class="sub">Тетрадь собрали — дальше ученики, тесты и расписание. Это тоже можно не держать в голове.</p>
-    <div class="grid g3">
-      <div class="card prod">
-        <img src="img/iskra.png" alt="Искра">
-        <div class="meta"><div class="who">Для репетитора и учеников</div><h3>Искра</h3>
-          <p>Кабинет ученика и учителя: уроки, домашки, материалы и прогресс — в браузере, на iPhone, iPad и Android.</p>
-          <a class="more" href="https://edu-study-app.vercel.app" target="_blank" rel="noopener">Открыть Искру ›</a></div>
+    <div class="bento">
+      <a class="tile big" style="--c:#7b6cf0" href="https://edu-study-app.vercel.app" target="_blank" rel="noopener">
+        <img src="img/iskra.png" alt="">
+        <div class="who">Для репетитора и учеников</div>
+        <h3>Искра</h3>
+        <p>Кабинет ученика и учителя: уроки, домашки, материалы и прогресс. В браузере, на iPhone, iPad и Android — один аккаунт на всё.</p>
+        <span class="go">Открыть Искру <i>›</i></span>
+      </a>
+      <a class="tile" style="--c:#6366f1" href="https://testly-sigma.vercel.app" target="_blank" rel="noopener">
+        <img src="img/testly.png" alt="">
+        <div class="who">Тесты и пробники</div>
+        <h3>Тестли</h3>
+        <p>Тест по ссылке или QR, баллы как на экзамене, проверка развёрнутых ответов по критериям.</p>
+        <span class="go">Открыть Тестли <i>›</i></span>
+      </a>
+      <div class="tile" style="--c:#5b8cff">
+        <img src="img/taskly.png" alt="">
+        <div class="who">Расписание</div>
+        <h3>Таскли</h3>
+        <p>Занятия, переносы, заметки и чек-листы в одной ленте. Виджет на экране iPhone.</p>
+        <span class="go soon">Скоро в App Store</span>
       </div>
-      <div class="card prod">
-        <img src="img/testly.png" alt="Тестли">
-        <div class="meta"><div class="who">Тесты и пробники</div><h3>Тестли</h3>
-          <p>Тест по ссылке или QR, баллы как на экзамене, проверка развёрнутых ответов по критериям и отчёт по каждому вопросу.</p>
-          <a class="more" href="https://testly-sigma.vercel.app" target="_blank" rel="noopener">Открыть Тестли ›</a></div>
-      </div>
-      <div class="card prod">
-        <img src="img/taskly.png" alt="Таскли">
-        <div class="meta"><div class="who">Расписание</div><h3>Таскли</h3>
-          <p>Дела и встречи в одной ленте: занятия, переносы, заметки и чек-листы. Виджет на экране iPhone.</p>
-          <span class="soon">Скоро в App Store</span></div>
-      </div>
-    </div>
-    <div class="grid g2" style="margin-top:18px">
-      <div class="card prod">
-        <img src="img/finansly.png" alt="Finansly">
-        <div class="meta"><div class="who">Ещё от нас</div><h3>Finansly</h3>
-          <p>Расходы голосом или фото чека, подписки и долги, остаток на день. Данные — только на телефоне.</p>
-          <a class="more" href="https://finansly-site-production.up.railway.app/" target="_blank" rel="noopener">Подробнее ›</a></div>
-      </div>
-      <div class="card prod">
-        <img src="img/erasely.png" alt="Erasely">
-        <div class="meta"><div class="who">Есть идея?</div><h3>Нужен свой инструмент?</h3>
-          <p>Делаем плагины Figma и сервисы под задачи репетиторов и онлайн-школ. Напишите, что мешает работать.</p>
-          <a class="more" href="https://t.me/dany_prodesign" target="_blank" rel="noopener">Написать в Telegram ›</a></div>
-      </div>
+      <a class="tile" style="--c:#9fd94a" href="https://finansly-site-production.up.railway.app/" target="_blank" rel="noopener">
+        <img src="img/finansly.png" alt="">
+        <div class="who">Ещё от нас</div>
+        <h3>Finansly</h3>
+        <p>Расходы голосом или фото чека, подписки и долги, остаток на день. Данные — только на телефоне.</p>
+        <span class="go">Подробнее <i>›</i></span>
+      </a>
+      <a class="tile" style="--c:#2997ff" href="https://t.me/dany_prodesign" target="_blank" rel="noopener">
+        <img src="img/erasely.png" alt="">
+        <div class="who">Есть идея?</div>
+        <h3>Нужен свой инструмент?</h3>
+        <p>Делаем плагины Figma и сервисы под задачи репетиторов и онлайн-школ. Расскажите, что мешает работать.</p>
+        <span class="go">Написать в Telegram <i>›</i></span>
+      </a>
     </div>
   </div>
 </section>
@@ -378,6 +413,25 @@
 </footer>
 
 <script>
+  // плавное раскрытие вопросов
+  document.querySelectorAll('.faq details').forEach((d) => {
+    const sum = d.querySelector('summary');
+    let anim = null;
+    sum.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (anim) anim.cancel();
+      const start = d.offsetHeight;
+      const opening = !d.open;
+      if (opening) d.open = true;
+      const end = opening ? d.scrollHeight : sum.offsetHeight + parseFloat(getComputedStyle(d).paddingTop) + parseFloat(getComputedStyle(d).paddingBottom);
+      anim = d.animate({ height: [start + 'px', end + 'px'] }, { duration: 320, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      let done = false;
+      const finish = () => { if (done) return; done = true; if (anim) anim.cancel(); anim = null; if (!opening) d.open = false; };
+      anim.onfinish = finish;
+      setTimeout(finish, 360);   // подстраховка: в фоновой вкладке анимации могут не доиграть
+    });
+  });
+
   document.querySelectorAll('.compare').forEach((c) => {
     const r = c.querySelector('input[type=range]');
     const set = () => c.style.setProperty('--pos', r.value + '%');
