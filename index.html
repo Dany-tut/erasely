@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Erasely — немая схема за один клик</title>
+<meta name="description" content="Бесплатный плагин Figma для репетиторов и учителей: стирает подписи и выноски со схем в прозрачность. Нейросеть внутри, работает без интернета.">
+<meta property="og:title" content="Erasely — немая схема за один клик">
+<meta property="og:description" content="Стирает подписи и выноски со схем в прозрачность. Бесплатный плагин Figma для репетиторов и учителей.">
+<meta property="og:image" content="img/og.jpg">
+<link rel="icon" href="img/erasely.png">
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #f5f5f7; --card: #ffffff; --ink: #1d1d1f; --ink2: #6e6e73; --line: #d2d2d7;
+    --accent: #0071e3; --accent-ink: #ffffff; --chk1: #ffffff; --chk2: #e8e8ed; --shadow: 0 20px 60px rgba(0,0,0,.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #000000; --bg2: #101012; --card: #1c1c1e; --ink: #f5f5f7; --ink2: #a1a1a6; --line: #38383a;
+      --accent: #2997ff; --chk1: #2c2c2e; --chk2: #3a3a3c; --shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px; line-height: 1.47; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px; }
+
+  /* nav */
+  nav { position: sticky; top: 0; z-index: 10; backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px); background: color-mix(in srgb, var(--bg) 78%, transparent);
+        border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+  nav .wrap { display: flex; align-items: center; gap: 10px; height: 52px; }
+  nav .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink); }
+  nav .brand img { width: 24px; height: 24px; }
+  nav .links { margin-left: auto; display: flex; gap: 22px; font-size: 13px; }
+  nav .links a { color: var(--ink2); }
+  @media (max-width: 640px) { nav .links a:not(.cta) { display: none; } }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 980px;
+         padding: 12px 22px; font-size: 17px; font-weight: 500; background: var(--accent); color: var(--accent-ink); }
+  .btn:hover { text-decoration: none; filter: brightness(1.08); }
+  .btn.ghost { background: transparent; color: var(--accent); padding-left: 6px; padding-right: 6px; }
+  .btn.small { padding: 6px 14px; font-size: 13px; }
+
+  /* hero */
+  .hero { text-align: center; padding: 72px 0 36px; }
+  .hero img.app { width: 96px; height: 96px; border-radius: 22px; box-shadow: var(--shadow); }
+  .eyebrow { color: var(--ink2); font-size: 19px; font-weight: 600; margin-top: 22px; }
+  h1 { font-size: clamp(40px, 7vw, 80px); line-height: 1.05; letter-spacing: -0.035em; font-weight: 700; margin-top: 8px; }
+  .lead { font-size: clamp(19px, 2.4vw, 24px); color: var(--ink2); max-width: 720px; margin: 18px auto 0; line-height: 1.35; }
+  .ctas { display: flex; gap: 14px; justify-content: center; align-items: center; margin-top: 28px; flex-wrap: wrap; }
+  .note { color: var(--ink2); font-size: 13px; margin-top: 12px; }
+
+  /* compare */
+  /* сравнение всегда «на листе бумаги», в любой теме */
+  .compare { position: relative; margin: 44px auto 0; max-width: 1000px; border-radius: 28px; overflow: hidden;
+             background: #fff; --chk1: #fff; --chk2: #e8e8ed; box-shadow: var(--shadow); user-select: none; touch-action: pan-y; }
+  .compare .layer { display: block; width: 100%; height: auto; padding: 52px 28px 28px; }
+  .compare .after-wrap img { padding: 52px 28px 28px; }
+  #cmp2 .layer, #cmp2 .after-wrap img { padding: 0; }
+  @media (max-width: 640px) { #cmp1 .layer, #cmp1 .after-wrap img { padding: 44px 10px 10px; } .compare { border-radius: 20px; } }
+  .compare .after-wrap { position: absolute; inset: 0; clip-path: inset(0 0 0 var(--pos, 50%)); }
+  .chk { background-color: var(--chk1);
+         background-image: linear-gradient(45deg, var(--chk2) 25%, transparent 25%), linear-gradient(-45deg, var(--chk2) 25%, transparent 25%),
+                           linear-gradient(45deg, transparent 75%, var(--chk2) 75%), linear-gradient(-45deg, transparent 75%, var(--chk2) 75%);
+         background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0; }
+  .compare .after-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .compare .handle { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 2px; background: var(--accent); transform: translateX(-1px); pointer-events: none; }
+  .compare .handle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; border-radius: 50%;
+             background: var(--accent); transform: translate(-50%, -50%); box-shadow: 0 4px 16px rgba(0,0,0,.25);
+             background-image: linear-gradient(90deg, transparent 13px, #fff 13px, #fff 15px, transparent 15px, transparent 25px, #fff 25px, #fff 27px, transparent 27px); }
+  .compare input[type=range] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+  .compare .tag { position: absolute; top: 14px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 980px;
+                  background: rgba(29,29,31,.82); color: #fff; pointer-events: none; }
+  .compare .tag.l { left: 14px; } .compare .tag.r { right: 14px; }
+  .caption { text-align: center; color: var(--ink2); font-size: 14px; margin-top: 14px; }
+
+  section { padding: 88px 0; }
+  section.alt { background: var(--bg2); }
+  h2 { font-size: clamp(32px, 4.6vw, 52px); line-height: 1.08; letter-spacing: -0.03em; font-weight: 700; text-align: center; }
+  .sub { text-align: center; color: var(--ink2); font-size: 21px; max-width: 680px; margin: 14px auto 0; line-height: 1.38; }
+
+  /* cards */
+  .grid { display: grid; gap: 18px; margin-top: 48px; }
+  .g4 { grid-template-columns: repeat(4, 1fr); } .g3 { grid-template-columns: repeat(3, 1fr); } .g2 { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 900px) { .g4 { grid-template-columns: repeat(2, 1fr); } .g3 { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .g4, .g2 { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border-radius: 22px; padding: 28px; }
+  section:not(.alt) .card { background: var(--bg2); }
+  .card h3 { font-size: 21px; letter-spacing: -0.02em; line-height: 1.2; }
+  .card p { color: var(--ink2); margin-top: 8px; font-size: 16px; }
+  .card .num { font-size: 15px; font-weight: 600; color: var(--accent); margin-bottom: 10px; }
+  .card .ico { width: 36px; height: 36px; color: var(--accent); margin-bottom: 14px; }
+
+  /* products */
+  .prod { display: flex; gap: 18px; align-items: flex-start; }
+  .g3 .prod { flex-direction: column; gap: 14px; }
+  .prod img { width: 64px; height: 64px; border-radius: 15px; flex: none; }
+  .prod .meta { flex: 1; min-width: 0; }
+  .prod .who { font-size: 12px; font-weight: 600; color: var(--ink2); text-transform: uppercase; letter-spacing: .04em; }
+  .prod a.more { display: inline-block; margin-top: 12px; font-size: 16px; }
+  .prod .soon { display: inline-block; margin-top: 12px; font-size: 14px; color: var(--ink2); }
+
+  /* faq */
+  .faq { max-width: 760px; margin: 40px auto 0; }
+  details { border-bottom: 1px solid var(--line); padding: 18px 0; }
+  summary { cursor: pointer; font-size: 19px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--ink2); font-weight: 400; font-size: 24px; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details p { color: var(--ink2); margin-top: 10px; }
+
+  .final { text-align: center; }
+  footer { border-top: 1px solid var(--line); padding: 28px 0 44px; color: var(--ink2); font-size: 12px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 22px; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#"><img src="img/erasely.png" alt="">Erasely</a>
+    <div class="links">
+      <a href="#how">Как работает</a>
+      <a href="#who">Для кого</a>
+      <a href="#more">Другие сервисы</a>
+      <a class="btn small cta" href="#get">Установить</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <img class="app" src="img/erasely-512.png" alt="Иконка Erasely">
+    <div class="eyebrow">Erasely для Figma</div>
+    <h1>Немая схема.<br>За один клик.</h1>
+    <p class="lead">Стирает подписи и выноски с рисунков — в прозрачность, а не белым. Для репетиторов
+      и учителей, которые собирают тетради, контрольные и презентации.</p>
+    <div class="ctas">
+      <a class="btn" href="#get">Установить бесплатно</a>
+      <a class="btn ghost" href="#how">Как это работает ›</a>
+    </div>
+    <div class="compare" id="cmp1" style="--pos:50%">
+      <img class="layer" src="img/meiosis-before.png" alt="Схема мейоза с подписями">
+      <div class="after-wrap chk"><img src="img/meiosis-after.png" alt="Та же схема без подписей"></div>
+      <div class="handle"></div>
+      <span class="tag l">До</span><span class="tag r">После</span>
+      <input type="range" min="0" max="100" value="50" aria-label="Сравнить до и после">
+    </div>
+    <p class="caption">Подвигайте ползунок. Шахматка — это прозрачность: рисунок ляжет на любую страницу.</p>
+  </div>
+</header>
+
+<section id="who" class="alt">
+  <div class="wrap">
+    <h2>Для тех, кто делает материалы сам.</h2>
+    <p class="sub">Картинка из учебника есть, а немой — нет. Раньше это полчаса в Photoshop на одну схему.</p>
+    <div class="grid g4">
+      <div class="card"><h3>Репетиторы ЕГЭ и ОГЭ</h3><p>Биология, химия, география — схемы «подпиши органы» для домашки и пробников.</p></div>
+      <div class="card"><h3>Школьные учителя</h3><p>Рабочие листы и самостоятельные из иллюстраций к параграфу.</p></div>
+      <div class="card"><h3>Методисты онлайн-школ</h3><p>Десятки схем в неделю для тетрадей и вебинаров — без дизайнера.</p></div>
+      <div class="card"><h3>Авторы презентаций</h3><p>Чистый рисунок, поверх которого подписи появляются по клику.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>Три шага.</h2>
+    <p class="sub">Всё внутри Figma: выделили картинку — получили немую схему на том же месте.</p>
+    <div class="grid g3">
+      <div class="card"><div class="num">1</div><h3>Выделите картинку</h3><p>Erasely сам подхватит её из выделения.</p></div>
+      <div class="card"><div class="num">2</div><h3>«Убрать подписи и выноски»</h3><p>Нейросеть находит текст, правила — линии от него. Можно отдельно: только подписи или только выноски.</p></div>
+      <div class="card"><div class="num">3</div><h3>Доведите и вставьте</h3><p>Ластик, «Выноска», «Рамка» и кисть «Восстановить». Потом «Заменить» — и схема на месте.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>Умнее, чем ластик.</h2>
+    <div class="grid g3">
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M7 9h10M7 13h6"/></svg>
+        <h3>Видит любой текст</h3><p>Встроенная нейросеть находит подписи любого шрифта, цвета и размера — даже заходящие на рисунок.</p>
+      </div>
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 9h6v6H3zM9 3h6v6H9zM15 9h6v6h-6zM9 15h6v6H9z" fill="currentColor" stroke="none" opacity=".35"/></svg>
+        <h3>Прозрачность, а не белое</h3><p>Стёртое на фоне становится прозрачным — схема ложится на цветную страницу без белых пятен.</p>
+      </div>
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20c4-1 6-5 8-8s4-7 8-8"/><path d="M4 12h16" stroke-dasharray="2 3"/></svg>
+        <h3>Закрашивает по рисунку</h3><p>Где выноска шла по телу или кости, место заливается окружающими цветами, контур продолжается.</p>
+      </div>
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
+        <h3>Цвет, ч/б и фото</h3><p>Цветные схемы, штриховая графика, фотографии — и белые подписи на тёмном фоне.</p>
+      </div>
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg>
+        <h3>Без интернета</h3><p>Всё считается на вашем компьютере. Картинки никуда не отправляются.</p>
+      </div>
+      <div class="card">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v8H4v-8M2 7h20v5H2zM12 22V7M12 7H8a2.5 2.5 0 1 1 0-5c3 0 4 5 4 5zM12 7h4a2.5 2.5 0 1 0 0-5c-3 0-4 5-4 5z"/></svg>
+        <h3>Бесплатно</h3><p>Без подписок, лимитов и регистрации. Просто плагин в Figma.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>И даже на фото.</h2>
+    <p class="sub">Белый рукописный текст на фотографии — стёрт, фон продолжен.</p>
+    <div class="compare" id="cmp2" style="--pos:50%">
+      <img class="layer" src="img/photo-before.jpg" alt="Фото с белыми подписями">
+      <div class="after-wrap"><img src="img/photo-after.jpg" alt="То же фото без подписей"></div>
+      <div class="handle"></div>
+      <span class="tag l">До</span><span class="tag r">После</span>
+      <input type="range" min="0" max="100" value="50" aria-label="Сравнить до и после">
+    </div>
+  </div>
+</section>
+
+<section id="more" class="alt">
+  <div class="wrap">
+    <h2>Erasely — бесплатно.<br>Вот что ещё мы делаем для репетиторов.</h2>
+    <p class="sub">Тетрадь собрали — дальше ученики, тесты и расписание. Это тоже можно не держать в голове.</p>
+    <div class="grid g3">
+      <div class="card prod">
+        <img src="img/iskra.png" alt="Искра">
+        <div class="meta"><div class="who">Для репетитора и учеников</div><h3>Искра</h3>
+          <p>Кабинет ученика и учителя: уроки, домашки, материалы и прогресс — в браузере, на iPhone, iPad и Android.</p>
+          <a class="more" href="https://edu-study-app.vercel.app" target="_blank" rel="noopener">Открыть Искру ›</a></div>
+      </div>
+      <div class="card prod">
+        <img src="img/testly.png" alt="Тестли">
+        <div class="meta"><div class="who">Тесты и пробники</div><h3>Тестли</h3>
+          <p>Тест по ссылке или QR, баллы как на экзамене, проверка развёрнутых ответов по критериям и отчёт по каждому вопросу.</p>
+          <a class="more" href="https://testly-sigma.vercel.app" target="_blank" rel="noopener">Открыть Тестли ›</a></div>
+      </div>
+      <div class="card prod">
+        <img src="img/taskly.png" alt="Таскли">
+        <div class="meta"><div class="who">Расписание</div><h3>Таскли</h3>
+          <p>Дела и встречи в одной ленте: занятия, переносы, заметки и чек-листы. Виджет на экране iPhone.</p>
+          <span class="soon">Скоро в App Store</span></div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card prod">
+        <img src="img/finansly.png" alt="Finansly">
+        <div class="meta"><div class="who">Ещё от нас</div><h3>Finansly</h3>
+          <p>Расходы голосом или фото чека, подписки и долги, остаток на день. Данные — только на телефоне.</p>
+          <a class="more" href="https://finansly-site-production.up.railway.app/" target="_blank" rel="noopener">Подробнее ›</a></div>
+      </div>
+      <div class="card prod">
+        <img src="img/erasely.png" alt="Erasely">
+        <div class="meta"><div class="who">Есть идея?</div><h3>Нужен свой инструмент?</h3>
+          <p>Делаем плагины Figma и сервисы под задачи репетиторов и онлайн-школ. Напишите, что мешает работать.</p>
+          <a class="more" href="https://t.me/dany_prodesign" target="_blank" rel="noopener">Написать в Telegram ›</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Вопросы.</h2>
+    <div class="faq">
+      <details><summary>Это правда бесплатно?</summary><p>Да. Без подписки, лимитов и регистрации. Мы зарабатываем на других сервисах — Искре и Тестли.</p></details>
+      <details><summary>Куда уходят мои картинки?</summary><p>Никуда. Нейросеть и всё остальное работают прямо в плагине на вашем компьютере, у плагина нет доступа в интернет.</p></details>
+      <details><summary>С какими картинками работает?</summary><p>Цветные схемы из учебников, чёрно-белая штриховая графика, фотографии с подписями. Лучше всего — рисунки с отдельными подписями и тонкими выносками.</p></details>
+      <details><summary>Всё стирается идеально?</summary><p>Почти всё — с первого клика. Остатки (стрелки, уходящие в тёмный рисунок, хвостики линий) добираются ластиком за секунды, а лишнее возвращает кисть «Восстановить».</p></details>
+      <details><summary>А фон фото он убирает?</summary><p>Нет — для фона у Figma есть своя кнопка Remove background. Erasely — про подписи и выноски.</p></details>
+      <details><summary>Нужна платная Figma?</summary><p>Нет, плагины работают и на бесплатном тарифе Figma.</p></details>
+    </div>
+  </div>
+</section>
+
+<section id="get" class="alt final">
+  <div class="wrap">
+    <img src="img/erasely-512.png" alt="" style="width:80px;height:80px;border-radius:18px">
+    <h2 style="margin-top:18px">Попробуйте на своей схеме.</h2>
+    <p class="sub">Erasely скоро появится в Figma Community. Пока — скачайте архив и установите за минуту:
+      распакуйте его, затем в Figma → Plugins → Development → Import plugin from manifest → выберите manifest.json.</p>
+    <div class="ctas"><a class="btn" href="Erasely.zip" download>Скачать для Figma</a></div>
+    <p class="note">Нужна Figma для компьютера · ~15 МБ · Mac и Windows</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Erasely — бесплатный плагин для Figma.</span>
+    <span>Детектор текста PP-OCRv4 (PaddleOCR, Apache-2.0) · onnxruntime-web (Microsoft, MIT)</span>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.compare').forEach((c) => {
+    const r = c.querySelector('input[type=range]');
+    const set = () => c.style.setProperty('--pos', r.value + '%');
+    r.addEventListener('input', set); set();
+  });
+</script>
+</body>
+</html>
