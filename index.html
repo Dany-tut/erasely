@@ -76,13 +76,27 @@
                            linear-gradient(45deg, transparent 75%, var(--chk2) 75%), linear-gradient(-45deg, transparent 75%, var(--chk2) 75%);
          background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0; }
   .compare .after-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
-  .compare .handle { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 2px; background: var(--accent); transform: translateX(-1px); pointer-events: none; }
-  .compare .handle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; border-radius: 50%;
-             background: var(--accent); transform: translate(-50%, -50%); box-shadow: 0 4px 16px rgba(0,0,0,.25);
-             background-image: linear-gradient(90deg, transparent 13px, #fff 13px, #fff 15px, transparent 15px, transparent 25px, #fff 25px, #fff 27px, transparent 27px); }
-  .compare input[type=range] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+  /* ручка «частицы/волна»: светящийся шов + орб + облако частиц */
+  .compare .handle { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 2px; transform: translateX(-1px); pointer-events: none; z-index: 2;
+             background: linear-gradient(180deg, rgba(41,151,255,0), var(--accent) 50%, rgba(41,151,255,0));
+             box-shadow: 0 0 10px var(--accent), 0 0 22px rgba(41,151,255,.5); }
+  .compare .handle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 46px; height: 46px; border-radius: 50%;
+             transform: translate(-50%, -50%);
+             background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23fff'%20stroke-width='2.2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M10.5%208L6.5%2012L10.5%2016'/%3E%3Cpath%20d='M13.5%208L17.5%2012L13.5%2016'/%3E%3C/svg%3E") center / 20px no-repeat,
+                         radial-gradient(circle at 50% 38%, rgba(41,151,255,.95), rgba(41,151,255,.32));
+             border: 1px solid rgba(255,255,255,.75);
+             box-shadow: 0 0 24px var(--accent), 0 0 58px rgba(41,151,255,.55), inset 0 1px 2px rgba(255,255,255,.55); }
+  .compare .particles { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 0; pointer-events: none; z-index: 1; }
+  .compare .particles .p { position: absolute; border-radius: 1px; background: var(--accent); box-shadow: 0 0 6px var(--accent);
+             will-change: transform, opacity; animation: cs-tw var(--d, 3s) ease-in-out var(--delay, 0s) infinite; }
+  @keyframes cs-tw {
+    0%, 100% { opacity: var(--o, .5); transform: translate(0, 0) scale(1); }
+    50% { opacity: calc(var(--o, .5) * .22); transform: translate(var(--drift, 6px), -3px) scale(.55); }
+  }
+  @media (prefers-reduced-motion: reduce) { .compare .particles .p { animation: none; } }
+  .compare input[type=range] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; z-index: 4; }
   .compare .tag { position: absolute; top: 14px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 980px;
-                  background: rgba(29,29,31,.82); color: #fff; pointer-events: none; transition: opacity .18s ease; }
+                  background: rgba(29,29,31,.82); color: #fff; pointer-events: none; transition: opacity .18s ease; z-index: 3; }
   .compare .tag.l { left: 14px; } .compare .tag.r { right: 14px; }
   .caption { text-align: center; color: var(--ink2); font-size: 14px; margin-top: 14px; }
 
@@ -436,6 +450,23 @@
   document.querySelectorAll('.compare').forEach((c) => {
     const r = c.querySelector('input[type=range]');
     const tagL = c.querySelector('.tag.l'), tagR = c.querySelector('.tag.r');
+    // облако частиц у шва
+    const pc = document.createElement('div'); pc.className = 'particles';
+    for (let i = 0; i < 54; i++) {
+      const p = document.createElement('div'); p.className = 'p';
+      const t = Math.random();                       // 0 у шва … 1 далеко
+      const side = Math.random() < 0.62 ? 1 : -1;    // чаще сносит в сторону «После»
+      const s = (1.4 + (1 - t) * 3.4).toFixed(1);
+      p.style.width = s + 'px'; p.style.height = s + 'px';
+      p.style.left = (side * t * 72).toFixed(1) + 'px';
+      p.style.top = (Math.random() * 100).toFixed(1) + '%';
+      p.style.setProperty('--o', (0.12 + 0.8 * (1 - t)).toFixed(2));
+      p.style.setProperty('--drift', (side * (4 + Math.random() * 9)).toFixed(1) + 'px');
+      p.style.setProperty('--d', (2.2 + Math.random() * 2.8).toFixed(2) + 's');
+      p.style.setProperty('--delay', (-Math.random() * 4).toFixed(2) + 's');
+      pc.appendChild(p);
+    }
+    c.appendChild(pc);
     const set = () => {
       const v = +r.value;
       c.style.setProperty('--pos', v + '%');
