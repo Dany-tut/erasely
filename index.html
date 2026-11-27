@@ -450,5 +450,184 @@
     set();
   });
 </script>
+<script>
+/* RU/EN */
+(function () {
+  // RU/EN: language from ?lang=, then saved choice, then browser (ru/uk/be/kk → ru, else en).
+  var EN = {
+"Erasely — убрать подписи с картинки за один клик": "Erasely — remove labels from an image in one click",
+"Бесплатный плагин Figma: стирает подписи, выноски и лишний текст с картинок в прозрачность — за один клик, без Photoshop и ручного ластика. Нейросеть внутри, работает без интернета.": "A free Figma plugin that erases labels, leader lines and stray text from images down to transparency — in one click, without Photoshop or a manual eraser. Built-in neural network, works offline.",
+"Erasely — хватит стирать вручную": "Erasely — stop erasing by hand",
+"Подписи, выноски и лишний текст уходят с картинки за один клик — в прозрачность, а не белым. Бесплатный плагин Figma, без Photoshop.": "Labels, leader lines and stray text disappear from an image in one click — to transparency, not white. A free Figma plugin, no Photoshop needed.",
+"Плагины": "Plugins",
+"Как работает": "How it works",
+"Подписи слоями": "Labels as layers",
+"Другие сервисы": "More from us",
+"Установить": "Install",
+"Иконка Erasely": "Erasely icon",
+"Erasely для Figma": "Erasely for Figma",
+"Хватит стирать": "Stop erasing",
+"вручную.": "by hand.",
+"Подписи, выноски и лишний текст уходят с картинки за один клик — в прозрачность, а не белым. Без Photoshop и ручного ластика. Бесплатно.": "Labels, leader lines and stray text vanish from an image in one click — to transparency, not white. No Photoshop, no manual eraser. Free.",
+"Установить бесплатно": "Install for free",
+"Как это работает ›": "See how it works ›",
+"Схема мейоза с подписями": "Labeled diagram of meiosis",
+"Та же схема без подписей": "The same diagram without labels",
+"До": "Before",
+"После": "After",
+"Сравнить до и после": "Compare before and after",
+"Подвигайте ползунок. Шахматка — это прозрачность: рисунок ляжет на любую страницу.": "Drag the slider. The checkerboard is transparency, so the drawing will sit on any page.",
+"Три плагина для Figma.": "Three plugins for Figma.",
+"Бесплатные инструменты для тех, кто делает учебные материалы и дизайн. Всё считается локально — без подписок, лимитов и регистрации.": "Free tools for people who make teaching materials and designs. Everything runs locally — no subscriptions, no limits, no sign-up.",
+"Стирает подписи и выноски со схем — в прозрачность, а не белым. Нейросеть находит текст, а подписи можно вернуть своими текстовыми слоями.": "Erases labels and leader lines from diagrams — to transparency, not white. A neural network finds the text, and you can bring the labels back as your own text layers.",
+"Подробнее и скачать ›": "Learn more and download ›",
+"Перспектива и скос, warp-сетка 3×3 и экспорт слоёв в After Effects: каждый фрейм становится готовой композицией.": "Perspective and skew, a 3×3 warp grid, and layer export to After Effects: every frame becomes a ready composition.",
+"Открыть сайт ›": "Visit the site ›",
+"Кладёт под объект мягкую изогнутую тень — карточка, картинка или стикер словно приподняты над страницей.": "Puts a soft, curved shadow under an object, so a card, image or sticker looks lifted off the page.",
+"Установка одинаковая: распакуйте архив → Figma → Plugins → Development → Import plugin from manifest.": "They all install the same way: unzip the archive → Figma → Plugins → Development → Import plugin from manifest.",
+"Для тех, кто делает материалы сам.": "For people who make their own materials.",
+"Картинка из учебника есть, а немой — нет. Раньше это полчаса в Photoshop на одну схему.": "You have the textbook picture, but not a blank version of it. That used to mean half an hour in Photoshop per diagram.",
+"Репетиторы ЕГЭ и ОГЭ": "Exam-prep tutors",
+"Биология, химия, география — схемы «подпиши органы» для домашки и пробников.": "Biology, chemistry, geography — “label the parts” diagrams for homework and mock exams.",
+"Школьные учителя": "School teachers",
+"Рабочие листы и самостоятельные из иллюстраций к параграфу.": "Worksheets and quizzes built from textbook illustrations.",
+"Методисты онлайн-школ": "Online school course designers",
+"Десятки схем в неделю для тетрадей и вебинаров — без дизайнера.": "Dozens of diagrams a week for workbooks and webinars — no designer required.",
+"Авторы презентаций": "Presentation makers",
+"Чистый рисунок, поверх которого подписи появляются по клику.": "A clean picture with labels that appear on click.",
+"Три шага.": "Three steps.",
+"Всё внутри Figma: выделили картинку — получили немую схему на том же месте.": "All inside Figma: select an image and get a blank diagram right in its place.",
+"Выделите картинку": "Select an image",
+"Erasely сам подхватит её из выделения.": "Erasely picks it up from your selection.",
+"«Убрать подписи и выноски»": "Remove labels and leader lines",
+"Нейросеть находит текст, правила — линии от него. Можно отдельно: только подписи или только выноски.": "The neural network finds the text, and rules trace the lines coming off it. You can also remove just the labels or just the lines.",
+"Доведите и вставьте": "Touch up and place",
+"Ластик, «Выноска», «Рамка» и кисть «Восстановить». Потом «Вставить в Figma» — схема на месте, а с «Подписи — слоями» рядом ляжет версия с вашим текстом.": "Use the eraser, the line and box tools, and the restore brush. Then place it back in Figma — the diagram lands in place, and with labels-as-layers on, a version with your own text appears next to it.",
+"Умнее, чем ластик.": "Smarter than an eraser.",
+"Видит любой текст": "Sees any text",
+"Встроенная нейросеть находит подписи любого шрифта, цвета и размера — даже заходящие на рисунок.": "The built-in neural network finds labels in any font, color and size — even ones that overlap the drawing.",
+"Чисто, без следов": "Clean, no traces",
+"Прозрачный фон остаётся прозрачным, белый — ровно белым: ни дыр в форме букв, ни серых «призраков».": "Transparent stays transparent and white stays solid white: no letter-shaped holes, no gray ghosts.",
+"Закрашивает по рисунку": "Fills in the drawing",
+"Где выноска шла по телу или кости, место заливается окружающими цветами, контур продолжается.": "Where a leader line crossed a body or a bone, the gap is filled with the surrounding colors and the outline carries on.",
+"Цвет, ч/б и фото": "Color, B&W and photos",
+"Цветные схемы, штриховая графика, фотографии — и белые подписи на тёмном фоне.": "Color diagrams, line art, photos — and white labels on dark backgrounds.",
+"Без интернета": "Works offline",
+"Всё считается на вашем компьютере. Картинки никуда не отправляются.": "Everything runs on your computer. Your images never leave it.",
+"Бесплатно": "Free",
+"Без подписок, лимитов и регистрации. Просто плагин в Figma.": "No subscriptions, no limits, no sign-up. Just a Figma plugin.",
+"И на цветных иллюстрациях.": "Color illustrations, too.",
+"Даже глянцевую схему с декором: плашки-заголовки, выноски и значки — убраны, фон дорисован.": "Even a glossy, decorated diagram: title badges, leader lines and icons are gone, and the background is filled in.",
+"Цветная схема диффузии с подписями": "Labeled color diagram of diffusion",
+"Та же схема без подписей и декора": "The same diagram without labels or decoration",
+"Подписи — снова текстом.": "Labels as text again.",
+"Уже вашим.": "Your text this time.",
+"Erasely читает подписи и возвращает их в Figma настоящими текстовыми слоями — на тех же местах, в вашем шрифте. Выноски — векторными линиями одной толщины, с галочками. Двигайте, правьте слова, меняйте стиль.": "Erasely reads the labels and brings them back into Figma as real text layers — in the same spots, in your font. Leader lines come back as even vector strokes with tick marks. Move them, edit the words, restyle everything.",
+"Скелет лягушки с подписями-картинкой": "Frog skeleton with labels baked into the image",
+"Та же схема: подписи — текстовые слои другим шрифтом, выноски — векторные": "The same diagram: labels as text layers in a different font, leader lines as vectors",
+"Картинка": "Image",
+"Слои Figma": "Figma layers",
+"Сравнить картинку и слои": "Compare the image and the layers",
+"Ваш шрифт и кегль": "Your font and size",
+"Выберите шрифт из всех, что есть в Figma, — кегль подберётся по ширине слов на картинке.": "Pick any font available in Figma — the size is matched to the width of the words in the picture.",
+"Номера вместо слов": "Numbers instead of words",
+"Режим «Номера»: 1, 2, 3… на месте подписей и ключ ответов рядом — готовое задание «подпиши части».": "Numbers mode puts 1, 2, 3… where the labels were, with an answer key alongside — a ready-made “label the parts” exercise.",
+"Оригинал цел": "Original stays intact",
+"Новая версия ложится рядом, исходная картинка не меняется. Всё — одной группой.": "The new version goes next to it; the source image is left untouched. Everything is kept in one group.",
+"Erasely — бесплатно.": "Erasely is free.",
+"Вот что ещё мы делаем для репетиторов.": "Here’s what else we make for tutors.",
+"Тетрадь собрали — дальше ученики, тесты и расписание. Это тоже можно не держать в голове.": "Workbook done — next come students, tests and the schedule. You don’t have to keep those in your head either.",
+"Для репетитора и учеников": "For tutors and students",
+"Искра": "Iskra",
+"Кабинет ученика и учителя: уроки, домашки, материалы и прогресс. В браузере, на iPhone, iPad и Android — один аккаунт на всё.": "A shared space for students and teachers: lessons, homework, materials and progress. In the browser, on iPhone, iPad and Android — one account for everything.",
+"Открыть Искру": "Open Iskra",
+"Тесты и пробники": "Tests and mock exams",
+"Тестли": "Testly",
+"Тест по ссылке или QR, баллы как на экзамене, проверка развёрнутых ответов по критериям.": "Share a test by link or QR code, score it like the real exam, and grade open answers against criteria.",
+"Открыть Тестли": "Open Testly",
+"Расписание": "Schedule",
+"Таскли": "Taskly",
+"Занятия, переносы, заметки и чек-листы в одной ленте. Виджет на экране iPhone.": "Lessons, reschedules, notes and checklists in one feed. Plus a widget on your iPhone Home Screen.",
+"Скоро в App Store": "Coming soon to the App Store",
+"Ещё от нас": "Also from us",
+"Расходы голосом или фото чека, подписки и долги, остаток на день. Данные — только на телефоне.": "Log expenses by voice or a photo of the receipt, track subscriptions and debts, see what’s left for today. Your data stays on your phone.",
+"Подробнее": "Learn more",
+"Есть идея?": "Got an idea?",
+"Нужен свой инструмент?": "Need a tool of your own?",
+"Делаем плагины Figma и сервисы под задачи репетиторов и онлайн-школ. Расскажите, что мешает работать.": "We build Figma plugins and services for tutors and online schools. Tell us what’s slowing you down.",
+"Написать в Telegram": "Message us on Telegram",
+"Вопросы.": "Questions.",
+"Это правда бесплатно?": "Is it really free?",
+"Да. Без подписки, лимитов и регистрации. Мы зарабатываем на других сервисах — Искре и Тестли.": "Yes. No subscription, no limits, no sign-up. We make our money on other products — Iskra and Testly.",
+"Куда уходят мои картинки?": "Where do my images go?",
+"Никуда. Нейросеть и всё остальное работают прямо в плагине на вашем компьютере, у плагина нет доступа в интернет.": "Nowhere. The neural network and everything else run inside the plugin on your computer, and the plugin has no internet access.",
+"С какими картинками работает?": "What kinds of images does it handle?",
+"Цветные схемы из учебников, чёрно-белая штриховая графика, фотографии с подписями. Лучше всего — рисунки с отдельными подписями и тонкими выносками.": "Color textbook diagrams, black-and-white line art, labeled photos. It works best on drawings with separate labels and thin leader lines.",
+"Всё стирается идеально?": "Does everything come out perfectly?",
+"Почти всё — с первого клика. Остатки (стрелки, уходящие в тёмный рисунок, хвостики линий) добираются ластиком за секунды, а лишнее возвращает кисть «Восстановить».": "Almost everything, on the first click. Leftovers (arrows running into dark areas, line stubs) take seconds with the eraser, and the restore brush brings back anything removed by mistake.",
+"Можно вернуть подписи своим шрифтом?": "Can I bring the labels back in my own font?",
+"Да — включите «Подписи — слоями» и нажмите «Вставить в Figma». Подписи станут текстовыми слоями в выбранном шрифте, выноски — векторными линиями. Ошибку распознавания (редко, чаще в рукописном шрифте) поправите прямо в слое.": "Yes — turn on labels-as-layers and place the result in Figma. The labels become text layers in the font you chose, and the leader lines become vectors. If a word is misread (rare, mostly with handwriting), just fix it in the layer.",
+"А фон фото он убирает?": "Does it remove photo backgrounds?",
+"Нет — для фона у Figma есть своя кнопка Remove background. Erasely — про подписи и выноски.": "No — Figma has its own Remove background button for that. Erasely is all about labels and leader lines.",
+"Нужна платная Figma?": "Do I need a paid Figma plan?",
+"Нет, плагины работают и на бесплатном тарифе Figma.": "No, the plugins work on Figma’s free plan too.",
+"Попробуйте на своей схеме.": "Try it on your own diagram.",
+"Erasely скоро появится в Figma Community. Пока — скачайте архив и установите за минуту: распакуйте его, затем в Figma → Plugins → Development → Import plugin from manifest → выберите manifest.json.": "Erasely is coming to Figma Community soon. Until then, download the archive and install it in a minute: unzip it, then in Figma go to Plugins → Development → Import plugin from manifest → pick manifest.json.",
+"Скачать для Figma": "Download for Figma",
+"Нужна Figma для компьютера · ~15 МБ · Mac и Windows": "Requires the Figma desktop app · ~15 MB · Mac and Windows",
+"Erasely — бесплатный плагин для Figma.": "Erasely is a free Figma plugin.",
+"Детектор текста PP-OCRv4 (PaddleOCR, Apache-2.0) · onnxruntime-web (Microsoft, MIT)": "Text detection by PP-OCRv4 (PaddleOCR, Apache-2.0) · onnxruntime-web (Microsoft, MIT)"
+};
+  var K = 'lang', CYR = /[А-Яа-яЁё]/, ATTRS = ['alt', 'aria-label', 'title', 'placeholder', 'content'];
+  function norm(s) { return s.replace(/\s+/g, ' ').trim(); }
+  function save(l) { try { localStorage.setItem(K, l); } catch (e) {} }
+  function detect() {
+    try { var q = new URLSearchParams(location.search).get('lang'); if (q === 'en' || q === 'ru') { save(q); return q; } } catch (e) {}
+    try { var s = localStorage.getItem(K); if (s === 'en' || s === 'ru') return s; } catch (e) {}
+    var l = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    return /^(ru|uk|be|kk)\b/i.test(l) ? 'ru' : 'en';
+  }
+  var texts = [], attrs = [];
+  var w = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_TEXT, {
+    acceptNode: function (n) { var p = n.parentNode && n.parentNode.nodeName; return p === 'SCRIPT' || p === 'STYLE' ? 2 : 1; }
+  });
+  for (var n; (n = w.nextNode());) { var k = norm(n.nodeValue); if (k && EN.hasOwnProperty(k)) texts.push([n, n.nodeValue, k]); else if (CYR.test(k)) console.warn('i18n: no EN for', k); }
+  document.querySelectorAll('*').forEach(function (el) {
+    ATTRS.forEach(function (a) { var v = el.getAttribute(a); if (v && EN.hasOwnProperty(norm(v))) attrs.push([el, a, v, norm(v)]); });
+  });
+  var btn;
+  function apply(l) {
+    document.documentElement.lang = l;
+    texts.forEach(function (t) {
+      if (l === 'ru') { t[0].nodeValue = t[1]; return; }
+      var m = t[1].match(/^\s*/)[0], e = t[1].match(/\s*$/)[0];
+      t[0].nodeValue = m + EN[t[2]] + e;
+    });
+    attrs.forEach(function (a) { a[0].setAttribute(a[1], l === 'ru' ? a[2] : EN[a[3]]); });
+    if (btn) {
+      btn.children[0].className = l === 'ru' ? 'on' : '';
+      btn.children[1].className = l === 'en' ? 'on' : '';
+      btn.setAttribute('aria-label', l === 'ru' ? 'Switch to English' : 'Switch to Russian');
+    }
+    window.dispatchEvent(new Event('langchange'));
+    window.dispatchEvent(new Event('resize'));
+  }
+  var st = document.createElement('style');
+  st.textContent = '.lang-sw{font:inherit;font-size:12px;line-height:1;letter-spacing:.02em;background:none;border:1px solid color-mix(in srgb,currentColor 25%,transparent);' +
+    'border-radius:980px;padding:5px 9px;color:inherit;cursor:pointer;opacity:.75;display:inline-flex;gap:5px;align-items:center}' +
+    '.lang-sw:hover{opacity:1}.lang-sw span{opacity:.5}.lang-sw span.on{opacity:1;font-weight:600}';
+  document.head.appendChild(st);
+  var links = document.querySelector('nav .links');
+  if (links) {
+    btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'lang-sw';
+    btn.innerHTML = '<span>RU</span><span>EN</span>';
+    btn.onclick = function () { var l = document.documentElement.lang === 'ru' ? 'en' : 'ru'; save(l); apply(l); };
+    var cta = links.querySelector('.cta, .pill');
+    links.insertBefore(btn, cta || null);
+  }
+  apply(detect());
+})();
+</script>
 </body>
 </html>
